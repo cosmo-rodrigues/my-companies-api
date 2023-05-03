@@ -3,10 +3,14 @@ import { CreateUserDto } from './dto/create.user.dto';
 
 @Injectable()
 export class UserService {
-  findOne(id: number) {
+  findOne(id: string) {
     return {
       id,
     };
+  }
+
+  findAll() {
+    return [];
   }
 
   create(createUserDto: CreateUserDto) {
