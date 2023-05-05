@@ -1,6 +1,3 @@
-import { Address } from 'src/entities/adress.entity';
-import { Company } from 'src/entities/company.entity';
-import { User } from 'src/entities/user.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import * as dotenv from 'dotenv';
 
@@ -13,6 +10,7 @@ export const config: PostgresConnectionOptions = {
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DB,
-  entities: [User, Company, Address],
+  entities: [`${__dirname}/../**/*.entity{.js,.ts}`],
+  migrations: [`${__dirname}/../migrations/{.ts,*.js}`],
   synchronize: true,
 };
