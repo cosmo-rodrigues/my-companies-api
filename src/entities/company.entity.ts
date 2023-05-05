@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Address } from './adress.entity';
 import { User } from './user.entity';
@@ -21,6 +23,12 @@ export class Company {
 
   @Column({ unique: true, nullable: false })
   cnpj: string;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'createdAt' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updatedAt' })
+  updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.companies)
   user: User;

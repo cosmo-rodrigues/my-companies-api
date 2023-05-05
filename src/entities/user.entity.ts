@@ -2,9 +2,11 @@ import * as bcrypt from 'bcrypt';
 import {
   BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { Company } from './company.entity';
@@ -22,6 +24,12 @@ export class User {
 
   @Column({ nullable: false })
   password: string;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'createdAt' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updatedAt' })
+  updatedAt: Date;
 
   @OneToMany(() => Company, (company) => company.user)
   companies: Company[];
