@@ -1,8 +1,13 @@
-import { Column } from 'typeorm/decorator/columns/Column';
-import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
-import { Entity } from 'typeorm/decorator/entity/Entity';
 import * as bcrypt from 'bcrypt';
-import { BeforeInsert } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+import { Company } from './company.entity';
 
 @Entity()
 export class User {
@@ -17,6 +22,9 @@ export class User {
 
   @Column({ nullable: false })
   password: string;
+
+  @OneToMany(() => Company, (company) => company.user)
+  companies: Company[];
 
   @BeforeInsert()
   async hashPassword() {

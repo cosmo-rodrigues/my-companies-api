@@ -14,5 +14,5 @@ export const config: PostgresConnectionOptions = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DB,
   entities: [User, Company, Address],
-  synchronize: false,
+  synchronize: true,
 };

@@ -1,6 +1,6 @@
-import { Column } from 'typeorm/decorator/columns/Column';
-import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
-import { Entity } from 'typeorm/decorator/entity/Entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Company } from './company.entity';
 
 @Entity()
 export class Address {
@@ -27,4 +27,7 @@ export class Address {
 
   @Column({ nullable: false })
   state: string;
+
+  @ManyToOne(() => Company, (company) => company.addresses)
+  company: Company;
 }

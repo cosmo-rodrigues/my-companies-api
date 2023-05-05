@@ -1,6 +1,12 @@
-import { Column } from 'typeorm/decorator/columns/Column';
-import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
-import { Entity } from 'typeorm/decorator/entity/Entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Address } from './adress.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Company {
@@ -15,4 +21,10 @@ export class Company {
 
   @Column({ unique: true, nullable: false })
   cnpj: string;
+
+  @ManyToOne(() => User, (user) => user.companies)
+  user: User;
+
+  @OneToMany(() => Address, (address) => address.company)
+  addresses: Address[];
 }
