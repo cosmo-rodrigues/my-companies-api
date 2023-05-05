@@ -7,7 +7,7 @@ export class CreateAddressDto {
   @IsString({ message: 'O CEP deve ser uma string.' })
   readonly zipCode: string;
 
-  @IsString({ message: 'O site deve ser uma string' })
+  @IsString({ message: 'O nome da rua deve ser uma string' })
   readonly street: string;
 
   @IsString({ message: 'O número deve ser uma string' })
