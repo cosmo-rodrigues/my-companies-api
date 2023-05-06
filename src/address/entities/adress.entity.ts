@@ -2,17 +2,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Company } from './company.entity';
+import { Company } from '../../company/entities/company.entity';
 
 @Entity()
 export class Address {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ nullable: false })
   name: string;
@@ -42,5 +43,6 @@ export class Address {
   updatedAt: Date;
 
   @ManyToOne(() => Company, (company) => company.addresses)
+  @JoinColumn({ name: 'companyId', referencedColumnName: 'id' })
   company: Company;
 }

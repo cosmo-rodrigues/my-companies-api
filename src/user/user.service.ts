@@ -1,33 +1,99 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
+import { User as UserEntity } from 'src/user/entities/user.entity';
+import {
+  createPasswordHashed,
+  validatePassword,
+} from 'src/utils/password.utils';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create.user.dto';
+import { UpdatePasswordDTO } from './dto/update.password.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
-  async findOne(id: string) {
-    return await this.userRepository.findOne({ where: { id: +id } });
+  async findOne(userId: number): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuário com id: ${userId} não encontrado.`);
+    }
+
+    return user;
   }
 
-  async findAll() {
+  async findUserByEmail(email: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Email: ${email} não encontrado.`);
+    }
+
+    return user;
+  }
+
+  async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.find();
   }
 
-  async create(createUserDto: CreateUserDto) {
-    const user = await this.userRepository.create(createUserDto);
-    return await this.userRepository.save(user);
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const user = await this.findUserByEmail(createUserDto.email).catch(
+      () => undefined,
+    );
+
+    if (user) {
+      throw new Error('Email já cadastrado.');
+    }
+    const passwordHashed = await createPasswordHashed(createUserDto.password);
+
+    return this.userRepository.save({
+      ...createUserDto,
+      password: passwordHashed,
+    });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     return await this.userRepository.update(id, updateUserDto);
   }
 
-  async deleteOne(id: string) {
+  async updatePasswordUser(
+    updatePasswordDTO: UpdatePasswordDTO,
+    userId: number,
+  ): Promise<UserEntity> {
+    const user = await this.findOne(userId);
+
+    const passwordHashed = await createPasswordHashed(
+      updatePasswordDTO.newPassword,
+    );
+
+    const isMatch = await validatePassword(
+      updatePasswordDTO.lastPassword,
+      user.password || '',
+    );
+
+    if (!isMatch) {
+      throw new Error('Última senha incorreta.');
+    }
+
+    return this.userRepository.save({
+      ...user,
+      password: passwordHashed,
+    });
+  }
+
+  async deleteOne(id: number) {
     return await this.userRepository.delete(id);
   }
 }

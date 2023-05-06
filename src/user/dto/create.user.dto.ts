@@ -1,6 +1,10 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
+  @IsString()
+  @IsOptional()
+  readonly id: number;
+
   @IsString({ message: 'O nome deve ser uma string.' })
   readonly name: string;
 
