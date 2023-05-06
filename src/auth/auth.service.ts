@@ -4,9 +4,9 @@ import { validatePassword } from '../utils/password.utils';
 import { ReturnUserDto } from '../user/dto/return.user.dto';
 import { User as UserEntity } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
-import { LoginDto } from './dtos/login.dto';
-import { LoginPayload } from './dtos/login.payload.dto';
-import { ReturnLogin } from './dtos/return.login.dto';
+import { LoginDto } from './dto/login.dto';
+import { LoginPayload } from './dto/login.payload.dto';
+import { ReturnLogin } from './dto/return.login.dto';
 
 @Injectable()
 export class AuthService {

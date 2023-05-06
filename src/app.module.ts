@@ -6,9 +6,11 @@ import { CompanyModule } from './company/company.module';
 import { AddressModule } from './address/address.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/orm.config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     UserModule,
     CompanyModule,
     AddressModule,
