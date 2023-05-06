@@ -18,9 +18,13 @@ export class UserController {
 
   @Get()
   async findAll(): Promise<ReturnUserDto[]> {
-    return (await this.userService.findAll()).map(
-      (user) => new ReturnUserDto(user),
-    );
+    try {
+      return (await this.userService.findAll()).map(
+        (user) => new ReturnUserDto(user),
+      );
+    } catch (error) {
+      return error;
+    }
   }
 
   @Get(':id')

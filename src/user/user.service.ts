@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User as UserEntity } from 'src/user/entities/user.entity';
 import {
@@ -54,7 +59,7 @@ export class UserService {
     );
 
     if (user) {
-      throw new Error('Email já cadastrado.');
+      throw new HttpException('Email já cadastrado.', HttpStatus.BAD_REQUEST);
     }
     const passwordHashed = await createPasswordHashed(createUserDto.password);
 
