@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  HttpException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { LoginPayload } from '../auth/dto/login.payload.dto';
@@ -31,7 +37,9 @@ export class RolesGuard implements CanActivate {
       .catch(() => undefined);
 
     if (!loginPayload) {
-      return false;
+      throw new UnauthorizedException(
+        'Você não tem permissão para acessar esse recurso',
+      );
     }
 
     return requiredRoles.some((role) => role === loginPayload?.typeUser);

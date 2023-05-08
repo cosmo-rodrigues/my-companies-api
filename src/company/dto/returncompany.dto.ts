@@ -16,6 +16,8 @@ export class ReturnCompanyDto {
     this.website = company.website;
     this.cnpj = company.cnpj;
     this.user = company.user;
-    this.addresses = company.addresses;
+    this.addresses = company.addresses.map(
+      (address) => new ReturnAddressDto(address),
+    );
   }
 }

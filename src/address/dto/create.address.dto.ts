@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAddressDto {
   @IsString()
@@ -25,4 +25,10 @@ export class CreateAddressDto {
 
   @IsString({ message: 'O estado deve ser uma string' })
   readonly state: string;
+
+  @IsNumber(
+    { maxDecimalPlaces: 0 },
+    { message: 'O endereço deve ser associado a uma empresa' },
+  )
+  companyId: number;
 }

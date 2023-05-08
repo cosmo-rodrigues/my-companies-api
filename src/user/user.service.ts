@@ -1,9 +1,5 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common/exceptions';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User as UserEntity } from 'src/user/entities/user.entity';
 import {
@@ -29,7 +25,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException(`Usuário com id: ${userId} não encontrado.`);
+      throw new NotFoundException(`Usuário não encontrado`);
     }
 
     return user;
@@ -43,7 +39,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException(`Email: ${email} não encontrado.`);
+      throw new NotFoundException(`Email inválido`);
     }
 
     return user;
@@ -59,7 +55,7 @@ export class UserService {
     );
 
     if (user) {
-      throw new HttpException('Email já cadastrado.', HttpStatus.BAD_REQUEST);
+      throw new ConflictException('Email já cadastrado.');
     }
     const passwordHashed = await createPasswordHashed(createUserDto.password);
 
