@@ -25,10 +25,13 @@ export class User {
   @Column({ nullable: false })
   password: string;
 
-  @CreateDateColumn({ type: 'timestamp', name: 'createdAt' })
+  @Column({ nullable: false })
+  typeUser: number;
+
+  @CreateDateColumn({ nullable: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', name: 'updatedAt' })
+  @UpdateDateColumn({ nullable: false })
   updatedAt: Date;
 
   @OneToMany(() => Company, (company) => company.user)

@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -16,4 +16,12 @@ export class CreateUserDto {
 
   @IsString({ message: 'A senha deve ser uma string.' })
   readonly password: string;
+
+  @IsNumber(
+    { allowInfinity: false, allowNaN: false },
+    {
+      message: 'Tipo de usuário obrigatório. Numérico: { user: 1, admin: 2 }.',
+    },
+  )
+  typeUser: number;
 }
