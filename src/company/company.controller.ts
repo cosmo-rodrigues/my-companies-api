@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Delete, Put } from '@nestjs/common/decorators';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserId } from 'src/decorators/user.id.decorator';
-import { UserType } from 'src/user/enum/user-type.enum';
+import { UserType } from 'src/user/enum/user.type.enum';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create.company.dto';
 import { ReturnCompanyDto } from './dto/returncompany.dto';
