@@ -10,12 +10,16 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdatePasswordDTO } from './dto/update.password.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
+import { ReturnUserDto } from './dto/return.user.dto';
+import { LoginPayload } from 'src/auth/dto/login.payload.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private jwtService: JwtService,
   ) {}
   async findOne(userId: number): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
@@ -27,6 +31,8 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`Usuário não encontrado`);
     }
+
+    user.password = undefined;
 
     return user;
   }
@@ -46,10 +52,13 @@ export class UserService {
   }
 
   async findAll(): Promise<UserEntity[]> {
-    return await this.userRepository.find();
+    return (await this.userRepository.find()).map((user) => {
+      user.password = undefined;
+      return user;
+    });
   }
 
-  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async create(createUserDto: CreateUserDto): Promise<ReturnUserDto> {
     const user = await this.findUserByEmail(createUserDto.email).catch(
       () => undefined,
     );
@@ -59,13 +68,26 @@ export class UserService {
     }
     const passwordHashed = await createPasswordHashed(createUserDto.password);
 
-    return this.userRepository.save({
+    const createdUser = await this.userRepository.save({
       ...createUserDto,
       password: passwordHashed,
     });
+
+    createdUser.password = undefined;
+
+    return {
+      ...createdUser,
+      accessToken: this.jwtService.sign({
+        ...new LoginPayload(createdUser),
+      }),
+    };
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
     return await this.userRepository.update(id, updateUserDto);
   }
 
@@ -88,7 +110,7 @@ export class UserService {
       throw new Error('Última senha incorreta.');
     }
 
-    return this.userRepository.save({
+    return await this.userRepository.save({
       ...user,
       password: passwordHashed,
     });

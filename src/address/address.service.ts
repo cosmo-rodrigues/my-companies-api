@@ -51,6 +51,7 @@ export class AddressService {
 
     const address = this.addressRepository.create({ ...addressData, company });
     const createdAddress = await this.addressRepository.save(address);
+    createdAddress.company.user.password = undefined;
 
     return new ReturnAddressDto(createdAddress);
   }

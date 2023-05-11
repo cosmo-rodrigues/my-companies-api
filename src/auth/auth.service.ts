@@ -29,6 +29,8 @@ export class AuthService {
       throw new NotFoundException('Email ou senha inválidos');
     }
 
+    user.password = undefined;
+
     return {
       accessToken: this.jwtService.sign({ ...new LoginPayload(user) }),
       user: new ReturnUserDto(user),

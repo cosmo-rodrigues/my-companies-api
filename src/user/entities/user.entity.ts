@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 
 import { Company } from '../../company/entities/company.entity';
+import { IsString } from 'class-validator';
 
 @Entity()
 export class User {
@@ -23,12 +24,14 @@ export class User {
   @Column({ unique: true, nullable: false })
   email: string;
 
-  @Exclude()
-  @Column({ nullable: false, select: false })
+  @Column({ nullable: false })
   password: string;
 
   @Column({ nullable: false })
   typeUser: number;
+
+  @IsString()
+  accessToken?: string;
 
   @CreateDateColumn({ nullable: false })
   createdAt: Date;

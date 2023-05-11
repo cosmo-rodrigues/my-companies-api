@@ -5,9 +5,9 @@ services:
     image: postgres
     restart: always
     environment:
-      DATABESE_USER: ${DATABESE_PASSWORD}
-      DATABESE_PASSWORD: ${DATABESE_USER}
-      DATABESE_DB: ${DATABESE_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
     env_file:
       - .env
     ports:
